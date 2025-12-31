@@ -4,6 +4,12 @@ const XLSX = require("xlsx");
 const multer = require("multer");
 
 const app = express();
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  next();
+});
+
 const upload = multer({ dest: "uploads/" });
 const STOCK_FILE = "stock.json";
 
