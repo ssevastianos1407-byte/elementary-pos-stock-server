@@ -10,22 +10,29 @@ let cachedStock = [];
 async function updateStock() {
   try {
     const response = await axios.get(
-      `${process.env.ELEMENTARY_BASE_URL}/products`,
+      "https://app.elementarypos.com/api/products",
       {
         headers: {
-          Authorization: `Bearer ${process.env.ELEMENTARY_API_KEY}`
+          "X-API-KEY": process.env.ELEMENTARY_API_KEY
         }
       }
     );
 
     cachedStock = response.data.map(p => ({
       name: p.name,
-      stock: p.stock
+      stock: p.stock_quantity ?? p.stock ?? 0
     }));
 
-    console.log("Stock updated");
+    console.log("Stock updated:", cachedStock.length, "products");
   } catch (err) {
-    console.error("Failed to update stock");
+    console.error("❌ Failed to update stock");
+
+    if (err.response) {
+      console.error("Status:", err.response.status);
+      console.error("Data:", err.response.data);
+    } else {
+      console.error(err.message);
+    }
   }
 }
 
@@ -40,7 +47,7 @@ app.get("/stock", (req, res) => {
   res.json(cachedStock);
 });
 
-// Initial fetch
+// Initial fetch on startup
 updateStock();
 
 const PORT = process.env.PORT || 3000;
