@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: elementary-pos-stock
+    env: node
+    plan: free
+    startCommand: npm start
