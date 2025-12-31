@@ -1,0 +1,1 @@
+# elementary-pos-stock-server
