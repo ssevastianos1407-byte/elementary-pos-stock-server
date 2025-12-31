@@ -79,12 +79,16 @@ app.post("/upload-stock", upload.single("file"), (req, res) => {
 // Public stock endpoint
 // --------------------
 app.get("/stock", (req, res) => {
-  const list = Object.entries(stock).map(([name, qty]) => ({
-    name,
-    stock: qty
-  }));
+  const list = Object.entries(stock)
+    .filter(([_, qty]) => qty > 0)   // 👈 hide zero stock
+    .map(([name, qty]) => ({
+      name,
+      stock: qty
+    }));
+
   res.json(list);
 });
+
 
 // --------------------
 const PORT = process.env.PORT || 3000;
